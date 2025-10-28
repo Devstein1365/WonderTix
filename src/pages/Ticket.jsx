@@ -126,34 +126,48 @@ const Ticket = () => {
   };
 
   const handleProceedToCheckout = () => {
-    console.log("Checkout button clicked!");
-    console.log("Selected Tickets:", selectedTickets);
+    console.log("=== CHECKOUT BUTTON CLICKED ===");
+    console.log("Selected Tickets Object:", selectedTickets);
 
-    const selected = Object.entries(selectedTickets).map(
-      ([ticketId, quantity]) => {
+    // Build selected tickets array
+    const selected = [];
+    for (const [ticketId, quantity] of Object.entries(selectedTickets)) {
+      if (quantity > 0) {
         const ticket = ticketCategories.find(
           (t) => t.id === parseInt(ticketId)
         );
-        return {
-          ...ticket,
-          quantity,
-        };
+        if (ticket) {
+          selected.push({
+            id: ticket.id,
+            name: ticket.name,
+            price: ticket.price,
+            quantity: quantity,
+          });
+        }
       }
-    );
+    }
 
-    console.log("Selected array:", selected);
-    console.log("Total:", calculateTotal());
+    console.log("Selected Tickets Array:", selected);
+    console.log("Total Amount:", calculateTotal());
 
     if (selected.length === 0) {
       alert("Please select at least one ticket");
       return;
     }
 
-    // Navigate to checkout with selected tickets
-    console.log("Navigating to checkout...");
-    navigate("/checkout", {
-      state: { tickets: selected, total: calculateTotal() },
-    });
+    try {
+      console.log("Navigating to /checkout...");
+      navigate("/checkout", {
+        state: {
+          tickets: selected,
+          total: calculateTotal(),
+        },
+      });
+      console.log("Navigation initiated!");
+    } catch (error) {
+      console.error("Navigation error:", error);
+      alert("Navigation failed: " + error.message);
+    }
   };
 
   return (
@@ -172,7 +186,7 @@ const Ticket = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-lg">
             <div className="flex items-center gap-2">
               <FaCalendarAlt />
-              <span>Dec 15 – Jan 5</span>
+              <span>Dec 15 - Jan 5</span>
             </div>
             <div className="hidden sm:block text-2xl">•</div>
             <div className="flex items-center gap-2">
@@ -311,8 +325,13 @@ const Ticket = () => {
               </div>
 
               <button
-                onClick={handleProceedToCheckout}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-[#B54738] text-white font-bold text-[13px] md:text-lg px-10 py-[11px] rounded-full shadow-lg hover:bg-[#a03d2f] hover:scale-105 transition-all"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleProceedToCheckout();
+                }}
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-[#B54738] text-white font-bold text-[13px] md:text-lg px-10 py-[11px] rounded-full shadow-lg hover:bg-[#a03d2f] hover:scale-105 transition-all cursor-pointer"
               >
                 <FaShoppingCart />
                 Proceed to Checkout
