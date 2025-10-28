@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaCheckCircle,
@@ -8,11 +8,13 @@ import {
   FaQrcode,
 } from "react-icons/fa";
 import TicketQRCode from "../components/TicketQRCode";
+import DownloadableTicket from "../components/DownloadableTicket";
 
 const PaymentSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { orderData } = location.state || {};
+  const [showTicket, setShowTicket] = useState(false);
 
   useEffect(() => {
     if (!orderData) {
@@ -35,11 +37,6 @@ const PaymentSuccess = () => {
     // Remove pending order
     localStorage.removeItem("pendingOrder");
   }, [orderData, navigate]);
-
-  const handleDownloadTickets = () => {
-    // TODO: Generate and download PDF tickets
-    alert("Ticket download will be implemented. For now, check your email!");
-  };
 
   if (!orderData) {
     return null;
@@ -180,14 +177,14 @@ const PaymentSuccess = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="grid md:grid-cols-2 gap-4">
+        {/* Quick Action Buttons */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
           <button
-            onClick={handleDownloadTickets}
+            onClick={() => setShowTicket(!showTicket)}
             className="flex items-center justify-center gap-2 bg-[#B54738] hover:bg-[#a03d2f] text-white font-bold py-4 rounded-lg transition-all hover:scale-[1.02]"
           >
             <FaDownload />
-            Download Tickets
+            {showTicket ? "Hide Ticket" : "View & Download Ticket"}
           </button>
           <button
             onClick={() => navigate("/")}
@@ -197,6 +194,13 @@ const PaymentSuccess = () => {
             Back to Home
           </button>
         </div>
+
+        {/* Downloadable Ticket Component */}
+        {showTicket && (
+          <div className="mt-8">
+            <DownloadableTicket orderData={orderData} />
+          </div>
+        )}
 
         {/* Event Details Reminder */}
         <div className="mt-8 bg-white rounded-lg p-6 text-center">
