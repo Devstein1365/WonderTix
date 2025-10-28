@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaDownload, FaEnvelope, FaHome } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaDownload,
+  FaEnvelope,
+  FaHome,
+  FaQrcode,
+} from "react-icons/fa";
+import TicketQRCode from "../components/TicketQRCode";
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -93,6 +100,31 @@ const PaymentSuccess = () => {
                 <p className="font-semibold text-gray-800">
                   {orderData.customerInfo.email}
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* QR Code Section */}
+          <div className="border-t border-b py-6 mb-6">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-[#3A4F30] mb-2 flex items-center gap-2">
+                  <FaQrcode className="text-[#B54738]" />
+                  Your Entry QR Code
+                </h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Present this QR code at the gate for quick check-in. Save it
+                  to your phone or print it out.
+                </p>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <p className="text-xs text-yellow-800">
+                    <strong>Important:</strong> One QR code covers all your
+                    tickets. Please arrive early for faster entry.
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0">
+                <TicketQRCode ticketData={orderData} />
               </div>
             </div>
           </div>
