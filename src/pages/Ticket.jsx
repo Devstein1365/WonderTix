@@ -126,6 +126,9 @@ const Ticket = () => {
   };
 
   const handleProceedToCheckout = () => {
+    console.log("Checkout button clicked!");
+    console.log("Selected Tickets:", selectedTickets);
+
     const selected = Object.entries(selectedTickets).map(
       ([ticketId, quantity]) => {
         const ticket = ticketCategories.find(
@@ -138,12 +141,16 @@ const Ticket = () => {
       }
     );
 
+    console.log("Selected array:", selected);
+    console.log("Total:", calculateTotal());
+
     if (selected.length === 0) {
       alert("Please select at least one ticket");
       return;
     }
 
     // Navigate to checkout with selected tickets
+    console.log("Navigating to checkout...");
     navigate("/checkout", {
       state: { tickets: selected, total: calculateTotal() },
     });
@@ -305,7 +312,7 @@ const Ticket = () => {
 
               <button
                 onClick={handleProceedToCheckout}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-[#B54738] text-white font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:bg-[#a03d2f] hover:scale-105 transition-all"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-[#B54738] text-white font-bold text-[13px] md:text-lg px-10 py-[11px] rounded-full shadow-lg hover:bg-[#a03d2f] hover:scale-105 transition-all"
               >
                 <FaShoppingCart />
                 Proceed to Checkout
