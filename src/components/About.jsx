@@ -5,8 +5,8 @@ const About = () => {
     <>
       <section className="max-w-5xl mx-auto py-16 px-6 grid md:grid-cols-2 gap-10 items-center">
         <img
-          src="https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&w=800&q=80"
-          alt="Festive lights"
+          src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=800&q=80"
+          alt="Happy Black family celebrating together"
           className="rounded-2xl shadow-lg"
         />
 

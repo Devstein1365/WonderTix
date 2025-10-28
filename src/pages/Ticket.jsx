@@ -13,6 +13,7 @@ import {
   FaMapMarkerAlt,
   FaClock,
   FaShoppingCart,
+  FaTimes,
 } from "react-icons/fa";
 
 const Ticket = () => {
@@ -123,6 +124,10 @@ const Ticket = () => {
 
   const getSelectedCount = () => {
     return Object.values(selectedTickets).reduce((sum, qty) => sum + qty, 0);
+  };
+
+  const handleClearSelection = () => {
+    setSelectedTickets({});
   };
 
   const handleProceedToCheckout = () => {
@@ -306,6 +311,15 @@ const Ticket = () => {
         {/* Order Summary */}
         {getSelectedCount() > 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 sticky bottom-6">
+            {/* Cancel/Close Button */}
+            <button
+              onClick={handleClearSelection}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-gray-200 hover:bg-red-500 hover:text-white text-gray-600 rounded-full transition-all hover:scale-110"
+              title="Cancel and clear selection"
+            >
+              <FaTimes />
+            </button>
+
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
                 <h3 className="text-2xl font-bold text-[#3A4F30] mb-2">
