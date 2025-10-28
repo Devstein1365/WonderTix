@@ -5,23 +5,23 @@
   body * {
     visibility: hidden;
   }
-  
+
   .printable-ticket,
   .printable-ticket * {
     visibility: visible;
   }
-  
+
   .printable-ticket {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
   }
-  
+
   .no-print {
     display: none !important;
   }
-  
+
   /* Ensure proper colors when printing */
   * {
     -webkit-print-color-adjust: exact !important;

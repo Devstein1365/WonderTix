@@ -75,9 +75,11 @@ const DownloadableTicket = ({ orderData }) => {
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert(
-        "Failed to generate PDF: " + error.message + ". Please try the image download instead or take a screenshot."
+        "Failed to generate PDF: " +
+          error.message +
+          ". Please try the image download instead or take a screenshot."
       );
-      
+
       // Restore button on error
       const originalButton = document.activeElement;
       if (originalButton) {
@@ -117,7 +119,7 @@ const DownloadableTicket = ({ orderData }) => {
         if (!blob) {
           throw new Error("Failed to create image blob");
         }
-        
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -136,9 +138,11 @@ const DownloadableTicket = ({ orderData }) => {
     } catch (error) {
       console.error("Error generating image:", error);
       alert(
-        "Failed to generate image: " + error.message + ". Please try taking a screenshot instead."
+        "Failed to generate image: " +
+          error.message +
+          ". Please try taking a screenshot instead."
       );
-      
+
       // Restore button on error
       const originalButton = document.activeElement;
       if (originalButton) {
@@ -340,7 +344,8 @@ const DownloadableTicket = ({ orderData }) => {
       </div>
 
       <p className="text-center text-sm text-gray-600 mt-4 no-print">
-        💡 Tip: If downloads fail, use "Print Ticket" and save as PDF, or take a screenshot!
+        💡 Tip: If downloads fail, use "Print Ticket" and save as PDF, or take a
+        screenshot!
       </p>
     </div>
   );
