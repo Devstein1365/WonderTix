@@ -9,7 +9,7 @@
 
 **Your Gateway to Nigeria's Most Magical Christmas Experience**
 
-[Live Demo](#) | [Documentation](./CHECKOUT_DOCUMENTATION.md) | [Payment Integration](./PAYMENT_INTEGRATION.md)
+[🌐 Live Demo](https://wondertix.vercel.app) | [📚 Documentation](./CHECKOUT_DOCUMENTATION.md) | [💳 Payment Integration](./PAYMENT_INTEGRATION.md)
 
 </div>
 
