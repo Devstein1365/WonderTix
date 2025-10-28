@@ -11,21 +11,40 @@ import {
   FaDownload,
   FaImage,
   FaFilePdf,
+  FaPrint,
 } from "react-icons/fa";
 import TicketQRCode from "./TicketQRCode";
 
 const DownloadableTicket = ({ orderData }) => {
   const ticketRef = useRef(null);
 
+  const printTicket = () => {
+    window.print();
+  };
+
   const downloadAsPDF = async () => {
-    if (!ticketRef.current) return;
+    if (!ticketRef.current) {
+      alert("Ticket element not found. Please refresh the page and try again.");
+      return;
+    }
 
     try {
-      // Capture the ticket as canvas
+      // Show loading state
+      const originalButton = document.activeElement;
+      if (originalButton) {
+        originalButton.textContent = "Generating PDF...";
+        originalButton.disabled = true;
+      }
+
+      // Capture the ticket as canvas with better options
       const canvas = await html2canvas(ticketRef.current, {
         scale: 2,
         backgroundColor: "#ffffff",
         logging: false,
+        useCORS: true,
+        allowTaint: true,
+        windowWidth: ticketRef.current.scrollWidth,
+        windowHeight: ticketRef.current.scrollHeight,
       });
 
       // Convert to image
@@ -47,35 +66,85 @@ const DownloadableTicket = ({ orderData }) => {
 
       // Save PDF
       pdf.save(`WonderTix-${orderData.transactionRef}.pdf`);
+
+      // Restore button
+      if (originalButton) {
+        originalButton.textContent = "Download as PDF";
+        originalButton.disabled = false;
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
-      alert("Failed to generate PDF. Please try again.");
+      alert(
+        "Failed to generate PDF: " + error.message + ". Please try the image download instead or take a screenshot."
+      );
+      
+      // Restore button on error
+      const originalButton = document.activeElement;
+      if (originalButton) {
+        originalButton.textContent = "Download as PDF";
+        originalButton.disabled = false;
+      }
     }
   };
 
   const downloadAsImage = async () => {
-    if (!ticketRef.current) return;
+    if (!ticketRef.current) {
+      alert("Ticket element not found. Please refresh the page and try again.");
+      return;
+    }
 
     try {
-      // Capture the ticket as canvas
+      // Show loading state
+      const originalButton = document.activeElement;
+      if (originalButton) {
+        originalButton.textContent = "Generating Image...";
+        originalButton.disabled = true;
+      }
+
+      // Capture the ticket as canvas with better options
       const canvas = await html2canvas(ticketRef.current, {
         scale: 3,
         backgroundColor: "#ffffff",
         logging: false,
+        useCORS: true,
+        allowTaint: true,
+        windowWidth: ticketRef.current.scrollWidth,
+        windowHeight: ticketRef.current.scrollHeight,
       });
 
       // Convert to blob and download
       canvas.toBlob((blob) => {
+        if (!blob) {
+          throw new Error("Failed to create image blob");
+        }
+        
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.download = `WonderTix-${orderData.transactionRef}.png`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
-      });
+
+        // Restore button
+        if (originalButton) {
+          originalButton.textContent = "Download as Image";
+          originalButton.disabled = false;
+        }
+      }, "image/png");
     } catch (error) {
       console.error("Error generating image:", error);
-      alert("Failed to generate image. Please try again.");
+      alert(
+        "Failed to generate image: " + error.message + ". Please try taking a screenshot instead."
+      );
+      
+      // Restore button on error
+      const originalButton = document.activeElement;
+      if (originalButton) {
+        originalButton.textContent = "Download as Image";
+        originalButton.disabled = false;
+      }
     }
   };
 
@@ -84,7 +153,7 @@ const DownloadableTicket = ({ orderData }) => {
       {/* Downloadable Ticket Design */}
       <div
         ref={ticketRef}
-        className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl mx-auto"
+        className="printable-ticket bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl mx-auto"
         style={{ fontFamily: "Arial, sans-serif" }}
       >
         {/* Header */}
@@ -246,7 +315,7 @@ const DownloadableTicket = ({ orderData }) => {
       </div>
 
       {/* Download Buttons */}
-      <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center no-print">
         <button
           onClick={downloadAsPDF}
           className="flex items-center justify-center gap-2 bg-[#B54738] hover:bg-[#a03d2f] text-white font-bold px-6 py-3 rounded-lg transition-all hover:scale-105 shadow-lg"
@@ -261,10 +330,17 @@ const DownloadableTicket = ({ orderData }) => {
           <FaImage />
           Download as Image
         </button>
+        <button
+          onClick={printTicket}
+          className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition-all hover:scale-105 shadow-lg"
+        >
+          <FaPrint />
+          Print Ticket
+        </button>
       </div>
 
-      <p className="text-center text-sm text-gray-600 mt-4">
-        💡 Tip: Download and save to your phone for easy access at the event!
+      <p className="text-center text-sm text-gray-600 mt-4 no-print">
+        💡 Tip: If downloads fail, use "Print Ticket" and save as PDF, or take a screenshot!
       </p>
     </div>
   );
